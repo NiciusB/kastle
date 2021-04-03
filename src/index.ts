@@ -1,10 +1,6 @@
 import dotenv from 'dotenv'
-import { GraphQLClient } from 'graphql-request'
-import { getSdk } from './castle-api/generated/api'
+import castleApi, { setCastleApiUserToken } from './castle-api'
 dotenv.config()
-
-const client = new GraphQLClient('https://api.castle.games/graphql')
-const api = getSdk(client)
 
 async function main() {
 	if (!process.env.CASTLE_USERNAME || !process.env.CASTLE_PASSWORD) {
@@ -13,10 +9,10 @@ async function main() {
 		)
 	}
 
-	const userId = await api
+	const userId = await castleApi
 		.userForLoginInput({ who: process.env.CASTLE_USERNAME })
 		.then((r) => r.userForLoginInput?.userId)
-	const token = await api
+	const token = await castleApi
 		.login({
 			userId,
 			password: process.env.CASTLE_PASSWORD,
@@ -27,9 +23,9 @@ async function main() {
 		throw new Error('Token not found')
 	}
 
-	client.setHeader('X-Auth-Token', token)
+	setCastleApiUserToken(token)
 
-	const decks = await api.getMyDecks()
+	const decks = await castleApi.getMyDecks()
 	console.log(JSON.stringify(decks, null, 2))
 }
 main()
