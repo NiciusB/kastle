@@ -1260,6 +1260,60 @@ export type UserStatusGameInput = {
   coverImage?: Maybe<Scalars['String']>;
 };
 
+export type UserWithoutDecksFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'userId' | 'name' | 'username' | 'email' | 'about' | 'websiteUrl' | 'twitterUsername' | 'itchUsername' | 'createdTime' | 'updatedTime' | 'isAnonymous' | 'token' | 'searchScore' | 'location' | 'links' | 'githubUsername' | 'twitchUsername' | 'phone'>
+);
+
+export type UserFragment = (
+  { __typename?: 'User' }
+  & { decks?: Maybe<Array<Maybe<(
+    { __typename?: 'Deck' }
+    & DeckFragment
+  )>>> }
+  & UserWithoutDecksFragment
+);
+
+export type DeckFragment = (
+  { __typename?: 'Deck' }
+  & Pick<Deck, 'id' | 'deckId' | 'title' | 'isVisible' | 'variables' | 'lastModified' | 'isDeleted'>
+  & { creator: (
+    { __typename?: 'User' }
+    & UserWithoutDecksFragment
+  ), cards: Array<Maybe<(
+    { __typename?: 'Card' }
+    & CardFragment
+  )>>, initialCard: (
+    { __typename?: 'Card' }
+    & CardFragment
+  ), currentCard?: Maybe<(
+    { __typename?: 'Card' }
+    & CardFragment
+  )> }
+);
+
+export type CardFragment = (
+  { __typename?: 'Card' }
+  & Pick<Card, 'creatorUserId' | 'id' | 'cardId' | 'deckId' | 'sceneId' | 'sceneData' | 'title' | 'updatedTime' | 'isSaved' | 'lastModified'>
+  & { scene?: Maybe<(
+    { __typename?: 'Scene' }
+    & SceneFragment
+  )>, blocks: Array<Maybe<(
+    { __typename?: 'CardBlock' }
+    & CardBlockFragment
+  )>> }
+);
+
+export type SceneFragment = (
+  { __typename?: 'Scene' }
+  & Pick<Scene, 'id' | 'sceneId' | 'data' | 'version'>
+);
+
+export type CardBlockFragment = (
+  { __typename?: 'CardBlock' }
+  & Pick<CardBlock, 'id' | 'cardBlockId' | 'type' | 'destinationCardId' | 'title' | 'cardBlockUpdateId' | 'metadata'>
+);
+
 export type UserForLoginInputQueryVariables = Exact<{
   who: Scalars['String'];
 }>;
@@ -1296,12 +1350,120 @@ export type GetMyDecksQuery = (
     { __typename?: 'User' }
     & { decks?: Maybe<Array<Maybe<(
       { __typename?: 'Deck' }
-      & Pick<Deck, 'deckId' | 'title' | 'lastModified'>
+      & Pick<Deck, 'deckId'>
     )>>> }
   )> }
 );
 
+export type GetDeckQueryVariables = Exact<{
+  deckId: Scalars['ID'];
+}>;
 
+
+export type GetDeckQuery = (
+  { __typename?: 'Query' }
+  & { deck: (
+    { __typename?: 'Deck' }
+    & DeckFragment
+  ) }
+);
+
+export const UserWithoutDecksFragmentDoc = gql`
+    fragment UserWithoutDecks on User {
+  id
+  userId
+  name
+  username
+  email
+  about
+  websiteUrl
+  twitterUsername
+  itchUsername
+  createdTime
+  updatedTime
+  isAnonymous
+  token
+  searchScore
+  location
+  links
+  githubUsername
+  twitchUsername
+  phone
+}
+    `;
+export const SceneFragmentDoc = gql`
+    fragment Scene on Scene {
+  id
+  sceneId
+  data
+  version
+}
+    `;
+export const CardBlockFragmentDoc = gql`
+    fragment CardBlock on CardBlock {
+  id
+  cardBlockId
+  type
+  destinationCardId
+  title
+  cardBlockUpdateId
+  metadata
+}
+    `;
+export const CardFragmentDoc = gql`
+    fragment Card on Card {
+  creatorUserId
+  id
+  cardId
+  deckId
+  sceneId
+  sceneData
+  scene {
+    ...Scene
+  }
+  title
+  blocks {
+    ...CardBlock
+  }
+  updatedTime
+  isSaved
+  lastModified
+}
+    ${SceneFragmentDoc}
+${CardBlockFragmentDoc}`;
+export const DeckFragmentDoc = gql`
+    fragment Deck on Deck {
+  creator {
+    ...UserWithoutDecks
+  }
+  id
+  deckId
+  title
+  cards {
+    ...Card
+  }
+  initialCard {
+    ...Card
+  }
+  currentCard {
+    ...Card
+  }
+  isVisible
+  variables
+  lastModified
+  isDeleted
+}
+    ${UserWithoutDecksFragmentDoc}
+${CardFragmentDoc}`;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  ...UserWithoutDecks
+  decks {
+    ...Deck
+  }
+}
+    ${UserWithoutDecksFragmentDoc}
+${DeckFragmentDoc}`;
 export const UserForLoginInputDocument = gql`
     query userForLoginInput($who: String!) {
   userForLoginInput(who: $who) {
@@ -1321,12 +1483,17 @@ export const GetMyDecksDocument = gql`
   me {
     decks {
       deckId
-      title
-      lastModified
     }
   }
 }
     `;
+export const GetDeckDocument = gql`
+    query getDeck($deckId: ID!) {
+  deck(deckId: $deckId) {
+    ...Deck
+  }
+}
+    ${DeckFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 
@@ -1342,6 +1509,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getMyDecks(variables?: GetMyDecksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetMyDecksQuery> {
       return withWrapper(() => client.request<GetMyDecksQuery>(GetMyDecksDocument, variables, requestHeaders));
+    },
+    getDeck(variables: GetDeckQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetDeckQuery> {
+      return withWrapper(() => client.request<GetDeckQuery>(GetDeckDocument, variables, requestHeaders));
     }
   };
 }

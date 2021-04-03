@@ -7,6 +7,15 @@ async function main() {
 	await castleApiLogin()
 
 	const decks = await castleApi.getMyDecks()
-	console.log(JSON.stringify(decks, null, 2))
+
+	const firstDeckId = decks.me?.decks?.[0]?.deckId
+
+	if (!firstDeckId) {
+		throw new Error('No firstDeckId')
+	}
+
+	const deck = await castleApi.getDeck({ deckId: firstDeckId })
+
+	console.log(JSON.stringify(deck.deck.title, null, 2))
 }
 main()

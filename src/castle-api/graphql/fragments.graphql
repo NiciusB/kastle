@@ -1,0 +1,90 @@
+fragment UserWithoutDecks on User {
+  id
+  userId
+  name
+  username
+  email
+  about
+  #photo
+  websiteUrl
+  twitterUsername
+  itchUsername
+  createdTime
+  updatedTime
+  isAnonymous
+  token
+  searchScore
+  location
+  links
+  githubUsername
+  twitchUsername
+  phone
+}
+
+fragment User on User {
+  ...UserWithoutDecks
+  decks {
+		...Deck
+	}
+}
+
+fragment Deck on Deck {
+  creator {
+		...UserWithoutDecks
+	}
+  id
+  deckId
+  title
+  cards {
+		...Card
+	}
+  initialCard {
+		...Card
+	}
+  currentCard {
+		...Card
+	}
+  isVisible
+  variables
+  lastModified
+  isDeleted
+}
+
+fragment Card on Card {
+  creatorUserId
+  id
+  cardId
+  deckId
+  sceneId
+  sceneData
+  #sceneBackups
+  scene {
+		...Scene
+	}
+  title
+  blocks {
+		...CardBlock
+	}
+  #backgroundImage
+  updatedTime
+  isSaved
+  lastModified
+}
+
+fragment Scene on Scene {
+  id
+  sceneId
+  data
+  version
+  #backgroundImage
+}
+
+fragment CardBlock on CardBlock {
+  id
+  cardBlockId
+  type
+  destinationCardId
+  title
+  cardBlockUpdateId
+  metadata
+}

@@ -14,8 +14,12 @@ query getMyDecks {
 	me {
 		decks {
 			deckId
-			title
-			lastModified
 		}
+	}
+}
+
+query getDeck($deckId: ID!) {
+	deck(deckId: $deckId) {
+			...Deck
 	}
 }
