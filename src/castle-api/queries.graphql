@@ -1,0 +1,21 @@
+query userForLoginInput($who: String!) {
+	userForLoginInput(who: $who) {
+		userId
+	}
+}
+
+mutation login($userId: ID, $password: String!) {
+	login(userId: $userId, password: $password) {
+		token
+	}
+}
+
+query getMyDecks {
+	me {
+		decks {
+			deckId
+			title
+			lastModified
+		}
+	}
+}

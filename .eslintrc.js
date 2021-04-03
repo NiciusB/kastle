@@ -13,4 +13,7 @@ module.exports = {
 	rules: {
 		'prettier/prettier': 'error',
 	},
+	globals: {
+		ApiTypes: 'readonly',
+	},
 }

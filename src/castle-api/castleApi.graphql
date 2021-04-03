@@ -1,0 +1,1506 @@
+# Downloaded from http://api.castle.games/graphql
+
+#
+type Query {
+  #
+  _empty: String
+
+  # deprecated - changed to publicChatChannels
+  allChatChannels: [ChatChannel]
+
+  #
+  chatChannels(channelIds: [ID]!): [ChatChannel]!
+
+  #
+  recentChatMessages: [ChatMessage]
+
+  #
+  recentChannelChatMessages(channelId: ID!): [ChatMessage]
+
+  #
+  subscribedChatChannels: [ChatChannel]
+
+  #
+  publicChatChannels: [ChatChannel]
+
+  #
+  previewFile(fileId: ID!): HostedFile
+
+  #
+  trendingGames: [Game]
+
+  #
+  featuredGames: [Game]
+
+  #
+  featuredExamples: [Game]
+
+  #
+  allGames(limit: Int): [Game]
+
+  #
+  game(gameId: ID, url: String): Game
+
+  #
+  previewGameAtUrl(url: String!, gameId: ID): Game
+
+  #
+  previewLocalGame(
+    castleFile: String!
+    castleFilePath: String
+    gameId: ID
+  ): Game
+
+  # deprecated
+  previewGame(url: String!): Game
+
+  # entryPoint is deprecated
+  gameServerLogs(gameId: ID, entryPoint: String, castleFileUrl: String): Json
+
+  #
+  multiplayerRegions: [MultiplayerRegion]
+
+  # deprecated
+  joinableMultiplayerSessions(isStaging: Boolean): [JoinableMultiplayerSession]
+
+  #
+  appNotifications(limit: Int, beforeId: ID): [AppNotification]
+
+  #
+  getNotificationPreferencesV2: Json!
+
+  # deprecated
+  getNotificationPreferences: NotificationPreferences
+
+  #
+  testHostedGameHashes(hashes: [String]!): Json
+
+  #
+  search(text: String!): SearchResults
+
+  #
+  autocomplete(text: String!): SearchResults
+
+  #
+  user(userId: ID!): User
+
+  #
+  users(userIds: [ID]!): [User]
+
+  #
+  me: User
+
+  #
+  userForLoginInput(who: String!): User
+
+  #
+  userForUsername(username: String!): User
+
+  #
+  allUsers: [User]
+
+  #
+  userStatusHistory(userId: ID, limit: Int, beforeId: ID): [UserStatus]
+
+  #
+  gameGlobalStorage(storageId: String!, key: String!): GameGlobalStorage
+
+  #
+  gameUserStorage(storageId: String!, key: String!): GameUserStorage
+
+  #
+  post(postId: ID!): Post
+
+  #
+  allPosts(pageSize: Int, pageAfterPostId: ID): [Post]
+
+  #
+  postsForGame(gameId: ID!, pageSize: Int, pageAfterPostId: ID): [Post]
+
+  #
+  postsForUser(userId: ID!, pageSize: Int, pageAfterPostId: ID): [Post]
+
+  #
+  mediaService(metadata: Json): Service!
+
+  #
+  ssoDiscourse(sso: String!, sig: String!): SSOResponse!
+
+  #
+  docsCache: Json
+
+  #
+  blogPost(blogPostId: ID!): BlogPost!
+
+  #
+  allBlogPosts(pageSize: Int, pageAfterBlogPostId: ID): [BlogPost]!
+
+  #
+  blogPostsForUser(
+    userId: ID!
+    orderBy: BlogPostOrderBy!
+    pageSize: Int
+    pageAfterBlogPostId: ID
+  ): [BlogPost]!
+
+  #
+  prefetchCards(cardId: ID!): [Card]!
+
+  #
+  card(cardId: ID!): Card!
+
+  #
+  deck(deckId: ID!): Deck!
+
+  #
+  allDecks: [Deck]!
+
+  #
+  deckFeed(limit: Int, lastModifiedBefore: Datetime): [Deck]!
+
+  #
+  featuredFeed: [Deck]!
+
+  #
+  deckHistory(limit: Int, offset: Int): [Deck]!
+
+  #
+  allScenes: [Scene]!
+
+  #
+  sceneBackup(cardId: ID!, version: Int!): Scene!
+
+  #
+  adminAllDecksWithCurationPolicies: [Deck]!
+}
+
+#
+type ChatChannel {
+  #
+  channelId: ID!
+
+  #
+  name: String!
+
+  #
+  type: String!
+
+  #
+  hasUnreadMessages: Boolean!
+
+  #
+  unreadNotificationCount: Int!
+
+  #
+  gameId: ID
+
+  #
+  createdTime: Datetime
+
+  #
+  updatedTime: Datetime
+
+  #
+  subscribedUsers: [User]
+
+  # only available in dms
+  otherUserId: ID
+}
+
+#
+scalar Datetime
+
+#
+type User {
+  #
+  id: ID!
+
+  #
+  userId: ID!
+
+  #
+  name: String
+
+  #
+  username: String
+
+  #
+  email: String
+
+  #
+  about: Json
+
+  #
+  photo: HostedFile
+
+  #
+  websiteUrl: String
+
+  #
+  twitterUsername: String
+
+  #
+  itchUsername: String
+
+  #
+  gameItems: [Game]
+
+  #
+  gamesCount: Int
+
+  #
+  gamesSumPlayCount: Int
+
+  #
+  createdTime: Datetime
+
+  #
+  updatedTime: Datetime
+
+  #
+  lastUserStatus: UserStatus
+
+  #
+  isAnonymous: Boolean
+
+  #
+  favoritedGames: [Game]
+
+  #
+  decks: [Deck]
+
+  #
+  adminAllDecks: [Deck]
+
+  #
+  token: String
+
+  #
+  searchScore: String
+
+  # Deprecated
+  isReal: Boolean
+
+  # Unused by client
+  location: String
+
+  #
+  links: Json
+
+  #
+  githubUsername: String
+
+  #
+  twitchUsername: String
+
+  #
+  phone: String
+
+  # Admin only
+  isTestUser: Boolean
+
+  #
+  postsCreated(pageSize: Int, pageAfterPostId: ID): [Post]
+}
+
+#
+scalar Json
+
+#
+type HostedFile {
+  #
+  fileId: ID
+
+  #
+  width: Int
+
+  #
+  height: Int
+
+  # This should be non-nullable, but the hardcoded playlist breaks that right now
+  url: String
+
+  #
+  smallUrl: String
+
+  #
+  overlayUrl: String
+
+  #
+  privateCardUrl: String
+
+  #
+  primaryColor: String
+
+  # Deprecated
+  imgixUrl: String
+
+  #
+  hash: String
+
+  #
+  name: String
+
+  #
+  encoding: String
+
+  #
+  mimeType: String
+
+  #
+  userId: ID
+
+  #
+  user: User
+
+  #
+  uploadedTime: Datetime
+
+  #
+  originUrl: String
+}
+
+#
+type Game {
+  #
+  url: String!
+
+  #
+  sourceUrl: String!
+
+  # Won't have these field for unregistered games
+  id: ID
+
+  #
+  gameId: ID
+
+  #
+  castleUrlPath: String
+
+  # slug is deprecated
+  slug: String
+
+  #
+  chatChannelId: ID
+
+  #
+  isCastleHosted: Boolean
+
+  # user and owner are aliases
+  userId: ID
+
+  #
+  user: User
+
+  #
+  ownerId: ID
+
+  #
+  owner: User
+
+  # These are aliases
+  name: String
+
+  #
+  title: String
+
+  #
+  metadata: Json
+
+  #
+  main: String
+
+  #
+  entryPoint: String
+
+  #
+  serverEntryPoint: String
+
+  #
+  storageId: String
+
+  #
+  description: String
+
+  #
+  coverImageFileId: ID
+
+  #
+  coverImage: HostedFile
+
+  #
+  unlisted: Boolean
+
+  #
+  draft: Boolean
+
+  #
+  createdTime: Datetime
+
+  #
+  updatedTime: Datetime
+
+  #
+  playCount: Int
+
+  #
+  sessionId: String
+
+  #
+  isFavorite: Boolean
+
+  #
+  favoriteCount: Int
+
+  #
+  searchScore: String
+
+  #
+  hostedFiles: Json
+
+  # internal
+  nameSlug: String
+
+  # admin
+  curationPolicies: [GameCurationPolicy]
+
+  #
+  postsSourced(pageSize: Int, pageAfterPostId: ID): [Post]
+}
+
+#
+type GameCurationPolicy {
+  #
+  gameCurationPolicyId: ID!
+
+  #
+  type: GameCurationPolicyType!
+
+  #
+  platform: GameCurationPolicyPlatform!
+
+  #
+  value: Int
+}
+
+#
+enum GameCurationPolicyType {
+  #
+  pin
+
+  #
+  blacklist
+
+  #
+  blacklistTrendingOnly
+}
+
+#
+enum GameCurationPolicyPlatform {
+  #
+  all
+
+  #
+  mobile
+
+  #
+  desktop
+}
+
+#
+type Post {
+  #
+  url: String!
+
+  #
+  postId: ID!
+
+  #
+  creatorUserId: ID!
+
+  #
+  creator: User!
+
+  #
+  sourceGameId: ID
+
+  #
+  sourceGame: Game
+
+  #
+  message: Json
+
+  #
+  mediaFileId: ID
+
+  #
+  media: HostedFile
+
+  #
+  hasData: Boolean
+
+  #
+  data: String
+
+  #
+  createdTime: Datetime
+}
+
+#
+type UserStatus {
+  #
+  id: ID!
+
+  #
+  userStatusId: ID!
+
+  #
+  status: String!
+
+  #
+  game: Game!
+
+  #
+  isRecent: Boolean!
+
+  #
+  lastPing: Datetime
+
+  #
+  platform: String!
+}
+
+#
+type Deck {
+  #
+  creatorUserId: ID!
+
+  #
+  creator: User!
+
+  #
+  id: ID!
+
+  #
+  deckId: ID!
+
+  #
+  title: String!
+
+  #
+  cards: [Card]!
+
+  #
+  initialCard: Card!
+
+  #
+  currentCard: Card
+
+  #
+  isVisible: Boolean!
+
+  #
+  variables: [Json]!
+
+  #
+  lastModified: Datetime
+
+  # admin
+  curationPolicies: [DeckCurationPolicy]
+
+  #
+  isDeleted: Boolean
+}
+
+#
+type Card {
+  #
+  creatorUserId: ID
+
+  #
+  id: ID!
+
+  #
+  cardId: ID!
+
+  #
+  deckId: ID!
+
+  #
+  sceneId: ID
+
+  #
+  sceneData: Json!
+
+  #
+  sceneBackups: [SceneBackup]!
+
+  #
+  scene: Scene
+
+  #
+  title: String!
+
+  #
+  blocks: [CardBlock]!
+
+  #
+  backgroundImage: HostedFile
+
+  #
+  updatedTime: Datetime
+
+  #
+  isSaved: Boolean
+
+  #
+  lastModified: Datetime
+
+  # admin
+  isDeleted: Boolean
+}
+
+#
+type SceneBackup {
+  #
+  version: Int
+
+  #
+  isAutosave: Boolean
+
+  #
+  createdTime: Datetime
+
+  #
+  backgroundImage: HostedFile
+
+  #
+  dataSize: Int
+}
+
+#
+type Scene {
+  #
+  id: ID!
+
+  #
+  sceneId: ID!
+
+  #
+  data: Json
+
+  #
+  version: Int
+
+  #
+  backgroundImage: HostedFile
+}
+
+#
+type CardBlock {
+  #
+  id: ID!
+
+  #
+  cardBlockId: ID!
+
+  #
+  type: String!
+
+  #
+  destinationCardId: ID
+
+  #
+  title: String!
+
+  #
+  cardBlockUpdateId: ID
+
+  #
+  metadata: Json
+}
+
+#
+type DeckCurationPolicy {
+  #
+  deckCurationPolicyId: ID!
+
+  #
+  type: DeckCurationPolicyType!
+
+  #
+  platform: DeckCurationPolicyPlatform!
+
+  #
+  value: Int
+}
+
+#
+enum DeckCurationPolicyType {
+  #
+  pin
+
+  #
+  blacklist
+
+  #
+  blacklistTrendingOnly
+}
+
+#
+enum DeckCurationPolicyPlatform {
+  #
+  all
+
+  #
+  mobile
+
+  #
+  desktop
+}
+
+#
+type ChatMessage {
+  #
+  chatMessageId: ID!
+
+  #
+  channelId: ID!
+
+  #
+  fromUserId: ID!
+
+  #
+  body: Json!
+
+  #
+  isEdited: Boolean!
+
+  #
+  editCount: Int!
+
+  #
+  reactions: Json!
+
+  #
+  triggersUnread: Boolean!
+
+  #
+  createdTime: Datetime
+
+  #
+  updatedTime: Datetime
+}
+
+#
+type MultiplayerRegion {
+  #
+  name: String!
+
+  #
+  pingAddress: String!
+}
+
+# deprecated
+type JoinableMultiplayerSession {
+  #
+  sessionId: String
+
+  #
+  game: Game
+}
+
+#
+type AppNotification {
+  #
+  appNotificationId: ID!
+
+  #
+  type: String!
+
+  #
+  body: Json!
+
+  #
+  status: AppNotificationStatus!
+
+  #
+  chatMessageId: ID
+
+  #
+  chatChannelId: ID
+
+  #
+  gameId: ID
+
+  #
+  authorUserId: ID
+
+  #
+  postId: ID
+
+  #
+  createdTime: Datetime
+
+  #
+  updatedTime: Datetime
+}
+
+#
+enum AppNotificationStatus {
+  #
+  unseen
+
+  #
+  seen
+
+  #
+  acted
+}
+
+#
+type NotificationPreferences {
+  #
+  email: [EmailNotificaionPreference]
+
+  #
+  desktop: [DesktopNotificaionPreference]
+}
+
+#
+type EmailNotificaionPreference {
+  #
+  type: String!
+
+  #
+  description: String!
+
+  #
+  frequency: EmailNotificationFrequency!
+
+  #
+  supportedFrequencies: [EmailNotificationFrequency]!
+}
+
+#
+enum EmailNotificationFrequency {
+  #
+  every
+
+  #
+  daily
+
+  #
+  never
+}
+
+#
+type DesktopNotificaionPreference {
+  #
+  type: String!
+
+  #
+  description: String!
+
+  #
+  frequency: DesktopNotificationFrequency!
+
+  #
+  supportedFrequencies: [DesktopNotificationFrequency]!
+}
+
+#
+enum DesktopNotificationFrequency {
+  #
+  every
+
+  #
+  never
+}
+
+#
+type SearchResults {
+  #
+  users: [User]
+
+  #
+  games: [Game]
+
+  #
+  chatChannels: [ChatChannel]
+}
+
+#
+type GameGlobalStorage {
+  #
+  storageId: String!
+
+  #
+  key: String!
+
+  #
+  value: String!
+}
+
+#
+type GameUserStorage {
+  #
+  storageId: String!
+
+  #
+  userId: ID!
+
+  #
+  key: String!
+
+  #
+  value: String!
+}
+
+#
+type Service {
+  #
+  type: String!
+
+  #
+  address: String!
+}
+
+#
+type SSOResponse {
+  #
+  redirectUrl: String!
+}
+
+#
+type BlogPost {
+  #
+  blogPostId: ID!
+
+  #
+  creatorUserId: ID!
+
+  #
+  creator: User!
+
+  #
+  slug: String
+
+  #
+  title: String
+
+  #
+  body: String
+
+  #
+  description: String
+
+  #
+  editCount: Int!
+
+  #
+  publishedTime: Datetime
+
+  #
+  createdTime: Datetime!
+
+  #
+  updatedTime: Datetime!
+}
+
+#
+enum BlogPostOrderBy {
+  #
+  published
+
+  #
+  created
+}
+
+#
+type Mutation {
+  #
+  _empty: String
+
+  #
+  sendChatMessage(message: String!, channelId: ID!, tempChatMessageId: ID): Null
+
+  #
+  editChatMessage(
+    message: String!
+    chatMessageId: ID!
+    tempChatMessageId: ID
+  ): Null
+
+  #
+  toggleChatMessageReaction(chatMessageId: ID!, emoji: String): ChatMessage!
+
+  #
+  markChatMessageRead(chatMessageId: ID!): ChatChannel!
+
+  #
+  createChatChannel(name: String!): ChatChannel!
+
+  #
+  joinChatChannel(channelId: ID!): ChatChannel!
+
+  #
+  leaveChatChannel(channelId: ID!): ChatChannel!
+
+  #
+  createGameChatChannel(gameId: ID!): ChatChannel!
+
+  #
+  createDMChatChannel(otherUserId: ID!): ChatChannel!
+
+  #
+  uploadFile(file: Upload!, params: UploadFileParams): HostedFile
+
+  #
+  uploadBase64(
+    data: String!
+    filename: String
+    mimetype: String
+    encoding: String
+    params: UploadFileParams
+  ): HostedFile
+
+  #
+  uploadScreenCapture(file: Upload!): [ScreenCaptureResult]
+
+  #
+  publishGame(url: String!, gameId: ID): Game
+
+  #
+  updateGame(url: String!): Game
+
+  #
+  deleteGame(url: String!): Null
+
+  # deprecated
+  registerGame(url: String!): Game
+
+  # admin
+  adminAddGameCurationPolicy(
+    gameId: ID!
+    type: GameCurationPolicyType!
+    platform: GameCurationPolicyPlatform!
+    value: Int
+  ): Null
+
+  #
+  adminRemoveGameCurationPolicy(gameCurationPolicyId: ID!): Null
+
+  # entryPoint and mediaUrl are deprecated
+  joinMultiplayerSession(
+    gameId: ID
+    entryPoint: String
+    mediaUrl: String
+    castleFileUrl: String
+    sessionId: String
+    isStaging: Boolean
+  ): MultiplayerSession
+
+  #
+  updatePings(pings: [UserPing], timeZone: String): Null
+
+  #
+  setAppNotificationsStatus(
+    appNotificationIds: [ID]!
+    status: AppNotificationStatus!
+  ): Null
+
+  #
+  setNotificationPreferencesV2(preferences: Json!): Json!
+
+  # admin
+  sendTestAppNotificationAdmin(
+    userId: ID!
+    type: String!
+    message: String!
+    chatMessageId: ID
+    chatChannelId: ID
+    gameId: ID
+    authorUserId: ID
+    postId: ID
+  ): AppNotification
+
+  # deprecated
+  updateEmailNotificationPreference(
+    type: String!
+    frequency: EmailNotificationFrequency!
+  ): NotificationPreferences
+
+  #
+  updateDesktopNotificationPreference(
+    type: String!
+    frequency: DesktopNotificationFrequency!
+  ): NotificationPreferences
+
+  #
+  uploadGame(gameFiles: [GameFile]!): Json
+
+  # deprecated
+  publishHostedGame(gameFiles: [GameFile]!): Json
+
+  #
+  createAnonymousUser: User
+
+  #
+  login(userId: ID, password: String!): User
+
+  #
+  signup(user: UserInput!, email: String, password: String!): User
+
+  #
+  sendResetPasswordEmail(userId: ID!): Null
+
+  #
+  resetPassword(code: String!, newPassword: String!): User
+
+  #
+  confirmEmail(code: String!): Null
+
+  #
+  logout: Null
+
+  #
+  toggleFavoriteGame(gameId: ID): Game
+
+  #
+  updateUser(userId: ID!, user: UserInput): User
+
+  # admin
+  markTestUser(userId: ID!, isTestUser: Boolean): User
+
+  #
+  setPasswordAdmin(userId: ID!, username: String!, password: String!): User
+
+  #
+  deleteUser(userId: ID!, email: String!): Null
+
+  # status is 'play' or 'make'
+  recordUserStatus(
+    status: String!
+    isNewSession: Boolean
+    registeredGameId: ID
+    unregisteredGame: UserStatusGameInput
+  ): UserStatus
+
+  #
+  setGameGlobalStorage(storageId: String!, key: String!, value: String): Boolean
+
+  #
+  setGameUserStorage(storageId: String!, key: String!, value: String): Boolean
+
+  #
+  createPost(postInput: PostInput!): Post
+
+  #
+  deletePost(postId: ID!): Null
+
+  #
+  createBlogPost(blogPost: BlogPostInput!): BlogPost!
+
+  #
+  updateBlogPost(
+    blogPostId: ID!
+    currentEditCount: Int!
+    blogPost: BlogPostInput!
+  ): BlogPost!
+
+  #
+  deleteBlogPost(blogPostId: ID!): Null
+
+  #
+  publishBlogPost(blogPostId: ID!): BlogPost!
+
+  #
+  unpublishBlogPost(blogPostId: ID!): BlogPost!
+
+  #
+  createDeck(deck: DeckInput!, card: CardInput!): Deck!
+
+  #
+  updateDeck(deckId: ID!, deck: DeckInput!): Deck!
+
+  #
+  addCard(deckId: ID!, card: CardInput!): [Card]!
+
+  #
+  duplicateCard(cardId: ID!): Card!
+
+  #
+  updateCard(cardId: ID!, card: CardInput!): [Card]!
+
+  #
+  deleteCard(cardId: ID!): Null
+
+  #
+  deleteDeck(deckId: ID!): Null
+
+  #
+  createScene(data: Json!, cardId: ID): Scene!
+
+  #
+  updateScene(sceneId: ID, cardId: ID, data: Json!): Scene!
+
+  #
+  deleteScene(sceneId: ID, cardId: ID): Null
+
+  #
+  recordDeckPlay(deckId: ID!): Null
+
+  #
+  updateCardAndDeckV2(
+    card: CardInput!
+    deck: DeckInput!
+    isAutosave: Boolean
+  ): CardAndDeck!
+
+  #
+  updateDeckV2(deck: DeckInput!): Deck!
+
+  #
+  adminAddDeckCurationPolicy(
+    deckId: ID!
+    type: DeckCurationPolicyType!
+    platform: DeckCurationPolicyPlatform!
+    value: Int
+  ): Null
+
+  #
+  adminRemoveDeckCurationPolicy(deckCurationPolicyId: ID!): Null
+
+  #
+  adminRestoreCard(cardId: ID!, sceneBackupVersion: Int!): Card!
+
+  #
+  updatePushToken(token: String!, platform: String!): Null
+}
+
+#
+scalar Null
+
+# The `Upload` scalar type represents a file upload.
+scalar Upload
+
+#
+input UploadFileParams {
+  #
+  autoCrop: Boolean
+}
+
+#
+type ScreenCaptureResult {
+  #
+  type: String
+
+  #
+  file: HostedFile
+}
+
+#
+type MultiplayerSession {
+  #
+  address: String!
+
+  #
+  agentAddress: String!
+
+  #
+  sessionId: String!
+
+  #
+  isNewSession: Boolean!
+
+  #
+  sessionToken: String!
+}
+
+#
+input UserPing {
+  #
+  region: String!
+
+  #
+  ping: Int
+}
+
+#
+input GameFile {
+  #
+  path: String!
+
+  # One of file or hash is required
+  # TODO: support diffs
+  file: Upload
+
+  #
+  hash: String
+}
+
+#
+input UserInput {
+  #
+  userId: String
+
+  #
+  name: String
+
+  #
+  username: String
+
+  #
+  about: Json
+
+  #
+  photoFileId: ID
+
+  #
+  websiteUrl: String
+
+  #
+  twitterUsername: String
+
+  #
+  itchUsername: String
+
+  # Unused by client
+  location: String
+
+  #
+  otherUsernames: Json
+
+  #
+  links: Json
+
+  #
+  info: Json
+
+  #
+  githubUsername: String
+
+  #
+  twitchUsername: String
+
+  #
+  isTeam: Boolean
+}
+
+#
+input UserStatusGameInput {
+  #
+  url: String!
+
+  #
+  name: String
+
+  #
+  title: String
+
+  #
+  coverImage: String
+}
+
+#
+input PostInput {
+  #
+  sourceGameId: ID
+
+  #
+  message: Json
+
+  #
+  mediaFileId: ID
+
+  #
+  data: String
+}
+
+#
+input BlogPostInput {
+  #
+  title: String
+
+  #
+  body: String
+
+  #
+  description: String
+}
+
+#
+input DeckInput {
+  #
+  deckId: ID
+
+  #
+  initialCardId: ID
+
+  #
+  title: String
+
+  #
+  isVisible: Boolean
+
+  #
+  variables: [Json!]
+}
+
+#
+input CardInput {
+  #
+  cardId: ID
+
+  #
+  deckId: ID
+
+  #
+  title: String
+
+  #
+  blocks: [CardBlockInput]!
+
+  #
+  backgroundImageFileId: ID
+
+  #
+  makeInitialCard: Boolean
+
+  #
+  sceneId: ID
+
+  #
+  sceneData: Json
+}
+
+#
+input CardBlockInput {
+  #
+  type: String!
+
+  #
+  destinationCardId: ID
+
+  #
+  title: String!
+
+  #
+  createDestinationCard: Boolean
+
+  #
+  cardBlockUpdateId: ID
+
+  #
+  metadata: Json
+}
+
+#
+type CardAndDeck {
+  #
+  card: Card!
+
+  #
+  deck: Deck!
+}

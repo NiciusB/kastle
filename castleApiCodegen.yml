@@ -1,0 +1,11 @@
+overwrite: true
+schema: "https://api.castle.games/graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/castle-api/generated/api.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - typescript-graphql-request
+      - add:
+          content: '/* eslint-disable */'
