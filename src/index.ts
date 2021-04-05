@@ -16,6 +16,6 @@ async function main() {
 
 	const deck = await castleApi.getDeck({ deckId: firstDeckId })
 
-	console.log(JSON.stringify(deck.deck.title, null, 2))
+	console.log(JSON.stringify(deck.deck.variables, null, 2))
 }
 main()

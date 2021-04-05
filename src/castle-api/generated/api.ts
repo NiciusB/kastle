@@ -1350,7 +1350,7 @@ export type GetMyDecksQuery = (
     { __typename?: 'User' }
     & { decks?: Maybe<Array<Maybe<(
       { __typename?: 'Deck' }
-      & Pick<Deck, 'deckId'>
+      & Pick<Deck, 'title' | 'deckId'>
     )>>> }
   )> }
 );
@@ -1482,6 +1482,7 @@ export const GetMyDecksDocument = gql`
     query getMyDecks {
   me {
     decks {
+      title
       deckId
     }
   }

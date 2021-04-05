@@ -13,6 +13,7 @@ mutation login($userId: ID, $password: String!) {
 query getMyDecks {
 	me {
 		decks {
+			title
 			deckId
 		}
 	}
