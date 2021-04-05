@@ -1,0 +1,25 @@
+{
+    "name": "kastle",
+    "displayName": "kastle",
+    "description": "",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.55.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "kastle",
+            "aliases": ["Kastle", "kastle"],
+            "extensions": ["kastle"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "kastle",
+            "scopeName": "source.kastle",
+            "path": "./syntaxes/kastle.tmLanguage.json"
+        }]
+    }
+}

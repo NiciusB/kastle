@@ -1,0 +1,6 @@
+# This is a comment
+blueprint1 {
+	@on created {
+		$a = 1
+	}
+}

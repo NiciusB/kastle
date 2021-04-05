@@ -1,0 +1,85 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Kastle",
+	"patterns": [
+		{
+			"include": "#expression"
+		}
+	],
+	"repository": {
+		"expression": {
+			"patterns": [
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#variable"
+				},
+				{
+					"include": "#rule-start"
+				},
+				{
+					"include": "#single-line-comment"
+				},
+				{
+					"include": "#decl-block"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.kastle",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.kastle",
+					"match": "\\\\."
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.control.kastle",
+					"match": "\\b(if|while|for|return)\\b"
+				}
+			]
+		},
+        "decl-block": {
+            "begin": "\\{",
+            "beginCaptures": {
+                "0": {
+                    "name": "meta.brace.curly.kastle"
+                }
+            },
+            "end": "\\}",
+            "endCaptures": {
+                "0": {
+                    "name": "meta.brace.curly.kastle"
+                }
+            },
+            "name": "meta.decl.block.kastle",
+            "patterns": [
+                {
+                    "include": "#expression"
+                }
+            ]
+        },
+		"variable": {
+			"name": "variable.kastle",
+			"match": "\\$(.+)(\\s*)(=+)"
+		},
+		"rule-start": {
+			"name": "entity.name.function.kastle",
+			"match": "@([a-zA-Z_0-9 ]+)"
+		},
+		"single-line-comment": {
+			"name": "comment.line.kastle",
+            "match": "#.*$\\n?"
+		}
+	},
+	"scopeName": "source.kastle"
+}
