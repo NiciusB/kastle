@@ -1,4 +1,4 @@
-import { tokenizeProgram } from '../../src/kastle-lang/tokenizer'
+import { tokenizeProgram } from '../../packages/kastle-lang/tokenizer'
 
 test('tokenizes empty program', () => {
 	const res = tokenizeProgram(``)
